@@ -61,13 +61,15 @@ The daemon starts automatically - no manual setup needed.
 In any terminal where you want Claude to see your commands:
 
 ```bash
-metaclaude track abc123def456...
+metaclaude track
 ```
 
-This wraps your shell and sends commands to the daemon. You'll see:
+That's it - no session ID needed. It auto-detects the active Claude session.
+
+You'll see:
 ```
 📡 metaclaude tracking active
-   Session: abc123def456...
+   Session: abc123...
    Terminal: T4f2a
    Shell: zsh
 ```
@@ -108,11 +110,11 @@ All suggestions come with **exact runnable commands**, not vague advice.
 
 | Command | Description |
 |---------|-------------|
-| `metaclaude daemon` | Start the tracking daemon |
+| `metaclaude track` | Track terminal commands (auto-detects session) |
 | `metaclaude install [--global]` | Install hooks into Claude Code |
 | `metaclaude uninstall [--global]` | Remove hooks from Claude Code |
-| `metaclaude track <session_id>` | Track terminal commands for a session |
 | `metaclaude status` | Show daemon status and active sessions |
+| `metaclaude daemon` | Start the tracking daemon (usually auto-started) |
 
 ## Architecture
 
@@ -160,12 +162,17 @@ npm uninstall -g metaclaude
 ## Development
 
 ```bash
-git clone https://github.com/your-username/metaclaude
+git clone https://github.com/dongreenber/metaclaude
 cd metaclaude
 npm install
 npm run build
+npm test     # run tests
 npm run dev  # watch mode
 ```
+
+## Status
+
+🚧 **Early development** - This project is experimental and under active development.
 
 ## License
 
