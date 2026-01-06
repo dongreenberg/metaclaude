@@ -20,11 +20,14 @@ program
   });
 
 program
-  .command("track [sessionId]")
-  .description("Track terminal commands for a Claude Code session (auto-detects if not provided)")
+  .command("start [sessionId]")
+  .description("Start metaclaude for a Claude Code session (connects to most recent session if not specified)")
+  .option("-s, --session <id>", "Session ID to connect to")
   .option("-t, --terminal-id <id>", "Identifier for this terminal")
   .action((sessionId, options) => {
-    track(sessionId, options.terminalId);
+    // --session flag takes precedence over positional arg
+    const session = options.session || sessionId;
+    track(session, options.terminalId);
   });
 
 program

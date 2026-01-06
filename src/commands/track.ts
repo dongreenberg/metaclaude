@@ -60,8 +60,8 @@ export async function track(sessionId?: string, terminalId?: string): Promise<vo
     const sessionFile = path.join(os.tmpdir(), "metaclaude-session");
     if (fs.existsSync(sessionFile)) {
       const content = fs.readFileSync(sessionFile, "utf-8").trim();
-      // File contains "metaclaude track <session_id>", extract just the ID
-      const match = content.match(/metaclaude track\s+(\S+)/);
+      // File may contain "metaclaude start --session <id>" or just the ID
+      const match = content.match(/--session\s+(\S+)/) || content.match(/metaclaude\s+\S+\s+(\S+)/);
       if (match) {
         resolvedSessionId = match[1];
       } else {
@@ -72,8 +72,8 @@ export async function track(sessionId?: string, terminalId?: string): Promise<vo
   }
 
   if (!resolvedSessionId) {
-    console.error("No session ID provided and no active session found.");
-    console.error("Start Claude Code first, then run: metaclaude track");
+    console.error("No session ID provided and no recent session found.");
+    console.error("Start Claude Code first, then run: metaclaude start");
     process.exit(1);
   }
 
@@ -89,11 +89,15 @@ export async function track(sessionId?: string, terminalId?: string): Promise<vo
   const tId = terminalId || generateTerminalId();
   const cwd = process.cwd();
 
-  console.log(`📡 metaclaude tracking active`);
+  console.log(`📡 metaclaude active`);
   console.log(`   Session: ${resolvedSessionId}`);
   console.log(`   Terminal: ${tId}`);
   console.log(`   Shell: ${shellName}`);
-  console.log(`   Press Ctrl+D to exit tracking\n`);
+  console.log(``);
+  console.log(`   To connect another terminal to this session:`);
+  console.log(`   metaclaude start --session ${resolvedSessionId}`);
+  console.log(``);
+  console.log(`   Press Ctrl+D to exit\n`);
 
   // For bash, we use PROMPT_COMMAND to capture commands
   // For zsh, we use precmd and preexec hooks

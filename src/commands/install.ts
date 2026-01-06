@@ -104,10 +104,10 @@ process.stdin.on('end', () => {
 
     // Write session ID to well-known file for easy access
     const sessionFile = path.join(os.tmpdir(), 'metaclaude-session');
-    fs.writeFileSync(sessionFile, 'metaclaude track ' + sessionId + '\\n');
+    fs.writeFileSync(sessionFile, sessionId + '\\n');
 
     // Output to context (Claude will see this)
-    console.log('📡 metaclaude active. Run "metaclaude track" in another terminal to connect.');
+    console.log('📡 metaclaude active. Run "metaclaude start" in another terminal to connect.');
   } catch (e) {
     // Silently exit on errors
   }
@@ -288,8 +288,8 @@ metaclaude installed successfully!
 
 Next steps:
 1. Start Claude Code:    claude
-2. In another terminal:  metaclaude track
-   (Auto-connects to the active Claude session)
+2. In another terminal:  metaclaude start
+   (Connects to the most recently started Claude session)
 `);
 }
 

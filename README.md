@@ -48,30 +48,25 @@ metaclaude install --global
 claude
 ```
 
-When Claude Code starts, you'll see:
-```
-📡 metaclaude active. Connect terminals with:
-   metaclaude track abc123def456...
-```
-
-The daemon starts automatically - no manual setup needed.
-
 ### 2. Connect your terminals
 
 In any terminal where you want Claude to see your commands:
 
 ```bash
-metaclaude track
+metaclaude start
 ```
 
-That's it - no session ID needed. It auto-detects the active Claude session.
+This connects to your most recently started Claude Code session.
 
 You'll see:
 ```
-📡 metaclaude tracking active
+📡 metaclaude active
    Session: abc123...
    Terminal: T4f2a
    Shell: zsh
+
+   To connect another terminal to this session:
+   metaclaude start --session abc123...
 ```
 
 Now use your terminal normally. Claude Code will see what you run and can suggest configuration improvements.
@@ -80,16 +75,6 @@ Now use your terminal normally. Claude Code will see what you run and can sugges
 
 ```bash
 metaclaude status
-```
-
-### Manual daemon control (optional)
-
-The daemon auto-starts when needed, but you can also control it manually:
-
-```bash
-metaclaude daemon          # Start in foreground (for debugging)
-metaclaude status          # Check if running
-lsof -ti:9999 | xargs kill # Stop the daemon
 ```
 
 ## What Claude Can Suggest
@@ -110,34 +95,17 @@ All suggestions come with **exact runnable commands**, not vague advice.
 
 | Command | Description |
 |---------|-------------|
-| `metaclaude track` | Track terminal commands (auto-detects session) |
+| `metaclaude start` | Start tracking terminal commands (connects to most recent session) |
+| `metaclaude start --session <id>` | Connect to a specific Claude Code session |
 | `metaclaude install [--global]` | Install hooks into Claude Code |
 | `metaclaude uninstall [--global]` | Remove hooks from Claude Code |
-| `metaclaude status` | Show daemon status and active sessions |
-| `metaclaude daemon` | Start the tracking daemon (usually auto-started) |
-
-## Architecture
-
-```
-metaclaude daemon (localhost:9999)
-    ↑                           ↓
-    │                    UserPromptSubmit hook
-    │                    (injects terminal context)
-    │                           ↓
-metaclaude track ──────→ Claude Code Session
-(in user terminals)
-```
-
-- **Daemon**: HTTP server tracking commands per Claude Code session
-- **SessionStart hook**: Shows session ID when Claude Code starts
-- **UserPromptSubmit hook**: Injects terminal context before each prompt
-- **track command**: Wraps shell to capture commands
+| `metaclaude status` | Show status and active sessions |
 
 ## Privacy
 
 - All data stays local (localhost only)
 - Commands are session-scoped and ephemeral
-- No persistence across daemon restarts
+- No persistence across restarts
 - You explicitly choose which terminals to track
 
 ## Configuration
